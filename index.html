@@ -8,6 +8,10 @@
 <meta name="description" content="用认知负荷理论与交替实例原则设计的英语词性学习游戏：名词、动词、形容词、副词，玩着玩着就会了。">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta property="og:type" content="website">
+<meta property="og:title" content="词性小剧场 · 小学生英语词性互动游戏">
+<meta property="og:description" content="名词、动词、形容词、副词四个角色各守一个岗位，8 关闯下来就会区分了。按认知负荷理论与交替实例原则设计。">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎭</text></svg>">
 <style>
 /* ============================================================
@@ -215,7 +219,8 @@ body{
 }
 
 /* ---------------- 关卡地图 ---------------- */
-.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:700px){ .map-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
 .map-item{
   position:relative;
   text-align:left;cursor:pointer;

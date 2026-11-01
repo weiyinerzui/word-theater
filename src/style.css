@@ -203,7 +203,8 @@ body{
 }
 
 /* ---------------- 关卡地图 ---------------- */
-.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.map-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (min-width:700px){ .map-grid{grid-template-columns:repeat(3,minmax(0,1fr))} }
 .map-item{
   position:relative;
   text-align:left;cursor:pointer;
