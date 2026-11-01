@@ -96,7 +96,10 @@ const POS = {
        ex: [['big', '大的'], ['happy', '开心的'], ['red', '红色的']] },
   d: { key: 'd', name: '副词', en: 'Adverb', emoji: '⚡', short: '怎样地', ask: '它能回答「怎样地做…」吗？',
        probe: '它能回答「<b>怎样地</b>做…」吗？',
-       ex: [['quickly', '快速地'], ['slowly', '慢慢地'], ['loudly', '大声地']] }
+       ex: [['quickly', '快速地'], ['slowly', '慢慢地'], ['loudly', '大声地']] },
+  p: { key: 'p', name: '介词', en: 'Preposition', emoji: '📍', short: '在哪里 · 什么时候', ask: '它告诉我们「在哪里 / 什么时候」吗？',
+       probe: '它后面跟着一个<b>名字</b>，告诉我们「<b>在哪里</b>」或「<b>什么时候</b>」吗？',
+       ex: [['in the box', '在盒子里'], ['on the desk', '在桌上'], ['at six', '在六点']] }
 };
 
 /* ================= 4 · 关卡数据 ================= */
@@ -134,10 +137,27 @@ const LEVELS = [
       { type: 'sort', words: [W('loudly', '大声地', '📢', 'd'), W('book', '书', '📕', 'n'), W('dance', '跳舞', '💃', 'v'), W('carefully', '小心地', '🔍', 'd')] }
     ]
   },
-  /* -------- 第 4 关：交替辨别（易混对） -------- */
+  /* -------- 第 4 关：加入介词（位置） -------- */
   {
-    id: 4, emoji: '🔀', name: '长得像，别认错', desc: '名词/形容词 · 动词/副词',
-    newRoles: [], roles: ['n', 'v', 'a', 'd'],
+    id: 4, emoji: '📍', name: '东西在哪里', desc: '+ 介词（位置）',
+    newRoles: ['p'], roles: ['n', 'v', 'a', 'd', 'p'], buckets: ['p', 'n'],
+    rounds: [
+      { type: 'sort', buckets: ['p', 'n'], tag: '介词 还是 名词？',
+        words: [W('in', '在…里', '📥', 'p'), W('box', '盒子', '📦', 'n'), W('on', '在…上', '⬆️', 'p'), W('desk', '书桌', '🪑', 'n')] },
+      { type: 'sort', buckets: ['p', 'n'], tag: '介词 还是 名词？',
+        words: [W('under', '在…下面', '⬇️', 'p'), W('bed', '床', '🛏️', 'n'), W('near', '在…附近', '🧭', 'p'), W('window', '窗户', '🪟', 'n')] },
+      { type: 'build', tag: '把「在哪里」说完整',
+        parts: [{ t: 'text', v: 'The' }, { t: 'slot', pos: 'n', expect: 'cat' }, { t: 'slot', pos: 'v' }, { t: 'slot', pos: 'p' }, { t: 'text', v: 'the' }, { t: 'slot', pos: 'n', expect: 'bed' }, { t: 'text', v: '.' }],
+        pool: [W('cat', '猫', '🐱', 'n'), W('sleeps', '睡觉', '😴', 'v'), W('on', '在…上', '⬆️', 'p'), W('bed', '床', '🛏️', 'n'), W('quickly', '快速地', '🐇', 'd')],
+        speak: 'The cat sleeps on the bed', zh: '猫在床上睡觉', scene: { emoji: '🐱', anim: 'hop' } },
+      { type: 'sentence', en: 'The book is in the box.', zh: '书在盒子里。',
+        tokens: [{ w: 'The', plain: true }, { w: 'book', pos: 'n' }, { w: 'is', plain: true }, { w: 'in', pos: 'p' }, { w: 'the', plain: true }, { w: 'box', pos: 'n' }] }
+    ]
+  },
+  /* -------- 第 5 关：交替辨别（易混对） -------- */
+  {
+    id: 5, emoji: '🔀', name: '长得像，别认错', desc: '词性对比 · 别被外形骗',
+    newRoles: [], roles: ['n', 'v', 'a', 'd', 'p'],
     rounds: [
       { type: 'sort', buckets: ['n', 'a'], tag: '名词 还是 形容词？',
         words: [W('mountain', '山', '⛰️', 'n'), W('clean', '干净的', '🧼', 'a'), W('tall', '高的', '🦒', 'a'), W('river', '河', '🌊', 'n')] },
@@ -149,20 +169,20 @@ const LEVELS = [
         words: [W('jump', '跳', '🤸', 'v'), W('slowly', '慢慢地', '🐢', 'd'), W('eat', '吃', '🍽️', 'v'), W('happily', '开心地', '😊', 'd')] }
     ]
   },
-  /* -------- 第 5 关：四个岗位一起 -------- */
+  /* -------- 第 6 关：五个岗位一起 -------- */
   {
-    id: 5, emoji: '🎪', name: '四个岗位全到齐', desc: '全部词性大集合',
-    newRoles: [], roles: ['n', 'v', 'a', 'd'], buckets: ['n', 'v', 'a', 'd'],
+    id: 6, emoji: '🎪', name: '五个岗位全到齐', desc: '五个词性大集合',
+    newRoles: [], roles: ['n', 'v', 'a', 'd', 'p'], buckets: ['n', 'v', 'a', 'd', 'p'],
     rounds: [
-      { type: 'sort', words: [W('apple', '苹果', '🍎', 'n'), W('quickly', '快速地', '🐇', 'd'), W('happy', '开心的', '😄', 'a'), W('jump', '跳', '🤸', 'v'), W('bus', '公交车', '🚌', 'n'), W('slowly', '慢慢地', '🐢', 'd'), W('tall', '高的', '🦒', 'a'), W('sing', '唱歌', '🎤', 'v')] },
-      { type: 'sort', words: [W('teacher', '老师', '👩‍🏫', 'n'), W('loudly', '大声地', '📢', 'd'), W('red', '红色的', '🍎', 'a'), W('swim', '游泳', '🏊', 'v'), W('park', '公园', '🌳', 'n'), W('carefully', '小心地', '🔍', 'd'), W('funny', '有趣的', '🤡', 'a'), W('read', '读', '📖', 'v')] },
-      { type: 'sort', words: [W('river', '河', '🌊', 'n'), W('happily', '开心地', '😊', 'd'), W('clean', '干净的', '🧼', 'a'), W('dance', '跳舞', '💃', 'v'), W('book', '书', '📕', 'n'), W('quietly', '安静地', '🤫', 'd'), W('strong', '强壮的', '💪', 'a'), W('eat', '吃', '🍽️', 'v')] }
+      { type: 'sort', words: [W('apple', '苹果', '🍎', 'n'), W('quickly', '快速地', '🐇', 'd'), W('happy', '开心的', '😄', 'a'), W('in', '在…里', '📥', 'p'), W('bus', '公交车', '🚌', 'n'), W('sing', '唱歌', '🎤', 'v')] },
+      { type: 'sort', words: [W('teacher', '老师', '👩‍🏫', 'n'), W('under', '在…下面', '⬇️', 'p'), W('loudly', '大声地', '📢', 'd'), W('red', '红色的', '🍎', 'a'), W('swim', '游泳', '🏊', 'v'), W('park', '公园', '🌳', 'n')] },
+      { type: 'sort', words: [W('river', '河', '🌊', 'n'), W('near', '在…附近', '🧭', 'p'), W('happily', '开心地', '😊', 'd'), W('clean', '干净的', '🧼', 'a'), W('dance', '跳舞', '💃', 'v'), W('book', '书', '📕', 'n')] }
     ]
   },
-  /* -------- 第 6 关：拼句子 -------- */
+  /* -------- 第 7 关：拼句子 -------- */
   {
-    id: 6, emoji: '🧩', name: '按岗位拼句子', desc: '把词放进正确的位置',
-    newRoles: [], roles: ['n', 'v', 'a', 'd'], buckets: ['n', 'v', 'a', 'd'],
+    id: 7, emoji: '🧩', name: '按岗位拼句子', desc: '把词放进正确的位置',
+    newRoles: [], roles: ['n', 'v', 'a', 'd', 'p'], buckets: ['n', 'v', 'a', 'd', 'p'],
     rounds: [
       {
         type: 'build',
@@ -172,52 +192,77 @@ const LEVELS = [
       },
       {
         type: 'build',
-        parts: [{ t: 'slot', pos: 'n' }, { t: 'slot', pos: 'v' }, { t: 'text', v: '.' }],
-        pool: [W('rabbits', '兔子们', '🐇', 'n'), W('jump', '跳', '🤸', 'v'), W('cute', '可爱的', '🐰', 'a'), W('slowly', '慢慢地', '🐢', 'd')],
-        speak: 'Rabbits jump', zh: '兔子们跳起来', scene: { emoji: '🐇', anim: 'hop' }
-      },
-      {
-        type: 'build',
         parts: [{ t: 'text', v: 'The' }, { t: 'slot', pos: 'a' }, { t: 'slot', pos: 'n' }, { t: 'slot', pos: 'v' }, { t: 'text', v: '.' }],
-        pool: [W('cute', '可爱的', '🐰', 'a'), W('rabbit', '兔子', '🐇', 'n'), W('jumps', '跳', '🤸', 'v'), W('slowly', '慢慢地', '🐢', 'd')],
+        pool: [W('cute', '可爱的', '🐰', 'a'), W('rabbit', '兔子', '🐇', 'n'), W('jumps', '跳', '🤸', 'v'), W('on', '在…上', '⬆️', 'p')],
         speak: 'The cute rabbit jumps', zh: '这只可爱的兔子跳起来', scene: { emoji: '🐇', anim: 'hop' }
       },
       {
         type: 'build',
         parts: [{ t: 'text', v: 'The' }, { t: 'slot', pos: 'a' }, { t: 'slot', pos: 'n' }, { t: 'slot', pos: 'v' }, { t: 'slot', pos: 'd' }, { t: 'text', v: '.' }],
-        pool: [W('little', '小小的', '🐜', 'a'), W('turtle', '乌龟', '🐢', 'n'), W('walks', '走', '🚶', 'v'), W('slowly', '慢慢地', '🐌', 'd')],
+        pool: [W('little', '小小的', '🐜', 'a'), W('turtle', '乌龟', '🐢', 'n'), W('walks', '走', '🚶', 'v'), W('slowly', '慢慢地', '🐌', 'd'), W('under', '在…下面', '⬇️', 'p')],
         speak: 'The little turtle walks slowly', zh: '这只小乌龟慢慢地走', scene: { emoji: '🐢', anim: 'slow' }
+      },
+      {
+        type: 'build',
+        parts: [{ t: 'text', v: 'The' }, { t: 'slot', pos: 'n', expect: 'dog' }, { t: 'slot', pos: 'v' }, { t: 'slot', pos: 'p' }, { t: 'text', v: 'the' }, { t: 'slot', pos: 'n', expect: 'tree' }, { t: 'text', v: '.' }],
+        pool: [W('dog', '狗', '🐶', 'n'), W('runs', '跑', '🏃', 'v'), W('under', '在…下面', '⬇️', 'p'), W('tree', '树', '🌳', 'n'), W('happy', '开心的', '😄', 'a')],
+        speak: 'The dog runs under the tree', zh: '狗在树下跑', scene: { emoji: '🐶', anim: 'fast' }
       }
     ]
   },
-  /* -------- 第 7 关：句子里的每个词 -------- */
+  /* -------- 第 8 关：介词进阶（时间） -------- */
   {
-    id: 7, emoji: '🔍', name: '句子大解剖', desc: '在句子里认出岗位',
-    newRoles: [], roles: ['n', 'v', 'a', 'd'], buckets: ['n', 'v', 'a', 'd'],
+    id: 8, emoji: '⏰', name: '时间介词 at/in/on', desc: '+ 介词（时间）',
+    newRoles: [], roles: ['p', 'n', 'a'], buckets: ['p', 'n', 'a'],
     rounds: [
-      { type: 'sentence', en: 'Birds sing sweetly.', zh: '鸟儿甜甜地唱歌。',
-        tokens: [{ w: 'Birds', pos: 'n' }, { w: 'sing', pos: 'v' }, { w: 'sweetly', pos: 'd' }] },
-      { type: 'sentence', en: 'The yellow bus stops suddenly.', zh: '那辆黄色的公交车突然停下了。',
-        tokens: [{ w: 'The', plain: true }, { w: 'yellow', pos: 'a' }, { w: 'bus', pos: 'n' }, { w: 'stops', pos: 'v' }, { w: 'suddenly', pos: 'd' }] },
-      { type: 'sentence', en: 'Two black cats sleep peacefully.', zh: '两只黑猫安静地睡着。',
-        tokens: [{ w: 'Two', plain: true }, { w: 'black', pos: 'a' }, { w: 'cats', pos: 'n' }, { w: 'sleep', pos: 'v' }, { w: 'peacefully', pos: 'd' }] }
+      { type: 'choice', tag: '时间介词怎么选',
+        q: '「在七点」用哪个介词？',
+        options: [{ v: 'at seven' }, { v: 'on seven' }, { v: 'in seven' }],
+        answer: 0,
+        why: 'at 后面跟着「几点」，at seven 就是在七点。',
+        hint: '先说时间是「几点」「星期几」还是「几月」。' },
+      { type: 'choice', tag: '时间介词怎么选',
+        q: '「在星期一」用哪个介词？',
+        options: [{ v: 'in Monday' }, { v: 'on Monday' }, { v: 'at Monday' }],
+        answer: 1,
+        why: 'on 后面跟着「星期几 / 具体哪一天」，on Monday 就是在星期一。',
+        hint: '星期一是一周里的一天，想想「具体哪一天」用哪个。' },
+      { type: 'sort', buckets: ['p', 'n', 'a'], tag: '介词 还是 名词 还是 形容词？',
+        words: [W('at', '在（几点）', '🕖', 'p'), W('Monday', '星期一', '📅', 'n'), W('early', '早的', '🌅', 'a'), W('in', '在（几月）', '📆', 'p'), W('morning', '早上', '☀️', 'n'), W('late', '晚的', '🌙', 'a')] },
+      { type: 'build', tag: '把时间说完整',
+        parts: [{ t: 'text', v: 'We' }, { t: 'slot', pos: 'v' }, { t: 'text', v: 'to' }, { t: 'slot', pos: 'n', expect: 'school' }, { t: 'slot', pos: 'p' }, { t: 'slot', pos: 'n', expect: 'seven' }, { t: 'text', v: '.' }],
+        pool: [W('go', '去', '🚶', 'v'), W('school', '学校', '🏫', 'n'), W('at', '在（几点）', '🕖', 'p'), W('seven', '七点', '7️⃣', 'n'), W('slowly', '慢慢地', '🐢', 'd')],
+        speak: 'We go to school at seven', zh: '我们七点去学校', scene: { emoji: '🎒', anim: 'fast' } }
     ]
   },
-  /* -------- 第 8 关：终极舞台 -------- */
+  /* -------- 第 9 关：句子里的每个词 -------- */
   {
-    id: 8, emoji: '🎬', name: '终极舞台', desc: '三颗心 · 通关拿证书',
-    newRoles: [], roles: ['n', 'v', 'a', 'd'], buckets: ['n', 'v', 'a', 'd'], hearts: 3,
+    id: 9, emoji: '🔍', name: '句子大解剖', desc: '在句子里认出岗位',
+    newRoles: [], roles: ['n', 'v', 'a', 'd', 'p'], buckets: ['n', 'v', 'a', 'd', 'p'],
     rounds: [
-      { type: 'sort', words: [W('dog', '狗', '🐶', 'n'), W('quickly', '快速地', '🐇', 'd'), W('happy', '开心的', '😄', 'a'), W('jumps', '跳', '🤸', 'v')] },
-      { type: 'sentence', en: 'The tall boy runs quickly.', zh: '那个高个子男孩跑得很快。',
-        tokens: [{ w: 'The', plain: true }, { w: 'tall', pos: 'a' }, { w: 'boy', pos: 'n' }, { w: 'runs', pos: 'v' }, { w: 'quickly', pos: 'd' }] },
+      { type: 'sentence', en: 'Birds sing sweetly in the tree.', zh: '鸟儿在树上甜甜地唱歌。',
+        tokens: [{ w: 'Birds', pos: 'n' }, { w: 'sing', pos: 'v' }, { w: 'sweetly', pos: 'd' }, { w: 'in', pos: 'p' }, { w: 'the', plain: true }, { w: 'tree', pos: 'n' }] },
+      { type: 'sentence', en: 'The yellow bus stops near the park.', zh: '那辆黄色的公交车在公园附近停下。',
+        tokens: [{ w: 'The', plain: true }, { w: 'yellow', pos: 'a' }, { w: 'bus', pos: 'n' }, { w: 'stops', pos: 'v' }, { w: 'near', pos: 'p' }, { w: 'the', plain: true }, { w: 'park', pos: 'n' }] },
+      { type: 'sentence', en: 'Two black cats sleep under the desk.', zh: '两只黑猫在书桌下面睡觉。',
+        tokens: [{ w: 'Two', plain: true }, { w: 'black', pos: 'a' }, { w: 'cats', pos: 'n' }, { w: 'sleep', pos: 'v' }, { w: 'under', pos: 'p' }, { w: 'the', plain: true }, { w: 'desk', pos: 'n' }] }
+    ]
+  },
+  /* -------- 第 10 关：终极舞台 -------- */
+  {
+    id: 10, emoji: '🎬', name: '终极舞台', desc: '三颗心 · 通关拿证书',
+    newRoles: [], roles: ['n', 'v', 'a', 'd', 'p'], buckets: ['n', 'v', 'a', 'd', 'p'], hearts: 3,
+    rounds: [
+      { type: 'sort', words: [W('dog', '狗', '🐶', 'n'), W('quickly', '快速地', '🐇', 'd'), W('in', '在…里', '📥', 'p'), W('happy', '开心的', '😄', 'a'), W('jumps', '跳', '🤸', 'v')] },
+      { type: 'sentence', en: 'The tall boy runs quickly to school.', zh: '那个高个子男孩很快地跑去学校。',
+        tokens: [{ w: 'The', plain: true }, { w: 'tall', pos: 'a' }, { w: 'boy', pos: 'n' }, { w: 'runs', pos: 'v' }, { w: 'quickly', pos: 'd' }, { w: 'to', pos: 'p' }, { w: 'school', pos: 'n' }] },
       {
         type: 'build',
-        parts: [{ t: 'text', v: 'The' }, { t: 'slot', pos: 'a' }, { t: 'slot', pos: 'n' }, { t: 'slot', pos: 'v' }, { t: 'text', v: '.' }],
-        pool: [W('happy', '开心的', '😄', 'a'), W('bird', '鸟', '🐦', 'n'), W('sings', '唱歌', '🎤', 'v'), W('quietly', '安静地', '🤫', 'd')],
-        speak: 'The happy bird sings', zh: '这只开心的鸟唱歌', scene: { emoji: '🐦', anim: 'fast' }
+        parts: [{ t: 'text', v: 'The' }, { t: 'slot', pos: 'a' }, { t: 'slot', pos: 'n', expect: 'bird' }, { t: 'slot', pos: 'v' }, { t: 'slot', pos: 'p' }, { t: 'text', v: 'the' }, { t: 'slot', pos: 'n', expect: 'branch' }, { t: 'text', v: '.' }],
+        pool: [W('happy', '开心的', '😄', 'a'), W('bird', '鸟', '🐦', 'n'), W('sings', '唱歌', '🎤', 'v'), W('on', '在…上', '⬆️', 'p'), W('branch', '树枝', '🌿', 'n'), W('quietly', '安静地', '🤫', 'd')],
+        speak: 'The happy bird sings on the branch', zh: '这只开心的鸟在树枝上唱歌', scene: { emoji: '🐦', anim: 'fast' }
       },
-      { type: 'sort', words: [W('book', '书', '📕', 'n'), W('quietly', '安静地', '🤫', 'd'), W('clean', '干净的', '🧼', 'a'), W('read', '读', '📖', 'v')] }
+      { type: 'sort', words: [W('book', '书', '📕', 'n'), W('quietly', '安静地', '🤫', 'd'), W('at', '在（几点）', '🕖', 'p'), W('clean', '干净的', '🧼', 'a'), W('read', '读', '📖', 'v')] }
     ]
   }
 ];
@@ -284,6 +329,7 @@ function screenMap() {
         <span class="role v">🏃 动词</span>
         <span class="role a">🎨 形容词</span>
         <span class="role d">⚡ 副词</span>
+        <span class="role p">📍 介词</span>
       </div>
     </div>
 
@@ -336,7 +382,8 @@ function howToPlay() {
       🏰 它是人、地方或东西的<b>名字</b>吗？<br>
       🏃 它表示一个<b>动作</b>吗？<br>
       🎨 它能回答「<b>什么样的</b>…」吗？<br>
-      ⚡ 它能回答「<b>怎样地</b>做…」吗？<br><br>
+      ⚡ 它能回答「<b>怎样地</b>做…」吗？<br>
+      📍 它后面跟着一个名字，告诉我们「<b>在哪里 / 什么时候</b>」吗？<br><br>
       <span style="font-size:13px;color:#8a8070">做错了没关系，游戏会告诉你怎么想。</span>
     </p>
     <button class="btn" id="ok" style="margin-top:14px;width:100%">知道了</button>
@@ -356,7 +403,7 @@ function showStats() {
   sheet(`
     <div class="big">📊</div>
     <h3>我的成绩</h3>
-    <p>一共收集了 <b style="color:var(--gold-dark)">${total}</b> / 24 颗星</p>
+    <p>一共收集了 <b style="color:var(--gold-dark)">${total}</b> / ${LEVELS.length * 3} 颗星</p>
     <div style="text-align:left;margin-top:12px">${rows}</div>
     <button class="btn" id="ok" style="margin-top:16px;width:100%">继续加油</button>
   `);
@@ -442,9 +489,9 @@ function roundSort(cfg, buckets, onDone) {
             <span class="wc-zh">${esc(w.zh)}</span>
           </button>`).join('')}
         </div>
-        <div class="buckets" id="buckets" style="margin-top:12px">
-          ${buckets.map(k => `<button class="bucket b-${k}" data-b="${k}">
-            <span class="b-head"><span class="b-name">${POS[k].emoji} ${POS[k].name}</span><small>· ${POS[k].short}</small>
+        <div class="buckets${buckets.length >= 5 ? ' five' : ''}" id="buckets" style="margin-top:12px">
+          ${buckets.map((k, bi) => `<button class="bucket b-${k}" data-b="${k}">
+            <span class="b-head"><span class="b-name"><i class="b-key">${bi + 1}</i>${POS[k].emoji} ${POS[k].name}</span><small>· ${POS[k].short}</small>
               <span class="b-count" data-c="${k}">0</span></span>
             <span class="b-items" data-items="${k}"></span>
           </button>`).join('')}
@@ -560,9 +607,9 @@ function roundSentence(cfg, buckets, onDone) {
         : `<button class="chip" data-i="${i}" data-pos="${t.pos}">${esc(t.w)}<span class="c-tag">?</span></button>`).join('')}
         </div>
         <div class="center" style="font-size:12.5px;color:var(--sub);margin-top:6px">${esc(cfg.zh)}</div>
-        <div class="buckets" id="buckets" style="margin-top:12px">
-          ${buckets.map(k => `<button class="bucket b-${k}" data-b="${k}" style="min-height:auto">
-            <span class="b-head"><span class="b-name">${POS[k].emoji} ${POS[k].name}</span><small>· ${POS[k].short}</small>
+        <div class="buckets${buckets.length >= 5 ? ' five' : ''}" id="buckets" style="margin-top:12px">
+          ${buckets.map((k, bi) => `<button class="bucket b-${k}" data-b="${k}" style="min-height:auto">
+            <span class="b-head"><span class="b-name"><i class="b-key">${bi + 1}</i>${POS[k].emoji} ${POS[k].name}</span><small>· ${POS[k].short}</small>
               <span class="b-count" data-c="${k}">0</span></span>
           </button>`).join('')}
         </div>
@@ -660,7 +707,7 @@ function roundBuild(cfg, onDone) {
           <div class="sentence" id="frame">
             ${cfg.parts.map((p, i) => p.t === 'text'
         ? `<span class="wstatic">${esc(p.v)}</span>`
-        : `<button class="slot" data-slot="${i}" data-need="${p.pos}">
+        : `<button class="slot" data-slot="${i}" data-need="${p.pos}"${p.expect ? ` data-expect="${esc(p.expect)}"` : ''}>
                    <span class="s-ph">放这里</span>
                    <span class="s-lab">${POS[p.pos].name}</span>
                  </button>`).join('')}
@@ -720,6 +767,7 @@ function roundBuild(cfg, onDone) {
         delete filled[si];
         slot.classList.remove('filled', 'ok');
         slot.innerHTML = `<span class="s-ph">放这里</span><span class="s-lab">${POS[cfg.parts[si].pos].name}</span>`;
+        if (cfg.parts[si].expect) slot.dataset.expect = cfg.parts[si].expect;
         const card = $$('.wcard', pool).find(c => c.dataset.en === w.en && c.classList.contains('used'));
         if (card) card.classList.remove('used');
         refresh(); setHint('拿回来了，再想想放哪里～', 'tip');
@@ -729,9 +777,15 @@ function roundBuild(cfg, onDone) {
       if (!sel) { setHint('先点下面一个<b>单词</b>，再点空位 👇', 'tip'); slot.classList.add('bad'); setTimeout(() => slot.classList.remove('bad'), 400); return; }
 
       const w = poolWords.find(x => x.en === sel) || { en: sel, zh: '', pos: '?' };
-      const need = cfg.parts[si].pos;
+      const part = cfg.parts[si];
+      const need = part.pos;
+      // 同词性有多个候选时，用 expect 精确校验，避免「词性对、词不对」也算过
+      const samePos = poolWords.filter(x => x.pos === need).length;
+      const posOk = w.pos === need;
+      const exactOk = part.expect ? w.en === part.expect : true;
+      const needExact = !!part.expect || samePos > 1;
 
-      if (w.pos === need) {
+      if (posOk && (needExact ? exactOk : true)) {
         filled[si] = w;
         slot.classList.add('filled', 'ok');
         slot.innerHTML = `<span class="s-en">${esc(w.en)}</span><span class="s-zh">${POS[w.pos].emoji}</span>`;
@@ -756,7 +810,11 @@ function roundBuild(cfg, onDone) {
         if (card) { card.classList.add('wrong'); setTimeout(() => card.classList.remove('wrong'), 420); }
         wrongTotal++; Sound.no();
         if (noteWrong()) { locked = true; setTimeout(levelFailed, 600); return; }
-        setHint(`❌ ${esc(sel)} 是${POS[w.pos] ? POS[w.pos].name : '另一个岗位'}，这个空位要放 <b>${POS[need].name}</b> 呀。`, 'bad');
+        if (posOk && !exactOk) {
+          setHint(`❌ 词性对了，但这句话要选<b>另一个</b>词 —— 看看目标句子：「${esc(cfg.zh)}」。`, 'bad');
+        } else {
+          setHint(`❌ ${esc(sel)} 是${POS[w.pos] ? POS[w.pos].name : '另一个岗位'}，这个空位要放 <b>${POS[need].name}</b> 呀。`, 'bad');
+        }
         sel = null;
       }
     });
@@ -935,12 +993,13 @@ function showCertificate(st) {
       <div class="center">
         <div class="ct-title">W O R D   T H E A T E R   证 书</div>
         <div class="ct-name" id="certName">${name ? esc(name) : '小小词性专家'}</div>
-        <div class="ct-desc">已经能分清 名词 · 动词 · 形容词 · 副词</div>
+        <div class="ct-desc">已经能分清 名词 · 动词 · 形容词 · 副词 · 介词</div>
         <div style="font-size:22px;letter-spacing:5px;color:var(--gold-dmer,var(--gold));margin:10px 0 6px">★★★</div>
       </div>
       <div class="props">
         <div class="prop">🏰</div><div class="prop">🏃</div><div class="prop">🎨</div><div class="prop">⚡</div>
-        <div class="prop">🧩</div><div class="prop">🔍</div><div class="prop">🎬</div><div class="prop">🏆</div>
+        <div class="prop">📍</div><div class="prop">🧩</div><div class="prop">🔍</div><div class="prop">🎬</div>
+        <div class="prop" style="grid-column:1 / -1;width:auto;justify-self:center">🏆 全岗位通关</div>
       </div>
       <div style="margin-top:12px">
         <input class="nameInput" id="nm" placeholder="写上你的名字，领证书" value="${esc(name)}" maxlength="12">
@@ -954,7 +1013,7 @@ function showCertificate(st) {
       小提示：下次遇到不认识的英文单词，用「三个问题」问一问它。
     </p>
   `);
-  putHint('🎬 恭喜杀青！你已经认识四个岗位了。', 'ok');
+  putHint('🎬 恭喜杀青！五个岗位你都认得了。', 'ok');
   $('#save').addEventListener('click', () => {
     Store.data.name = $('#nm').value.trim(); Store.save();
     $('#certName').textContent = Store.data.name || '小小词性专家';
@@ -1028,15 +1087,16 @@ function boot() {
   const unlock = () => { Sound.init(); document.removeEventListener('pointerdown', unlock); };
   document.addEventListener('pointerdown', unlock);
 
-  // 键盘：Esc 关闭弹层；1-4 快捷选岗位（方便大屏 / 老师演示）
+  // 键盘：Esc 关闭弹层；数字键按「屏幕上第几个岗位」快捷选择（方便大屏 / 老师演示）
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (document.getElementById('sheetRoot').innerHTML) closeSheet();
       return;
     }
-    const k = { '1': 'n', '2': 'v', '3': 'a', '4': 'd' }[e.key];
-    if (!k) return;
-    const b = document.querySelector(`.bucket[data-b="${k}"]`);
+    // 按屏幕上的实际顺序取桶，这样只显示 2 个岗位时按 3 不会误点
+    const idx = { '1': 0, '2': 1, '3': 2, '4': 3, '5': 4 }[e.key];
+    if (idx === undefined) return;
+    const b = $$('.bucket')[idx];
     if (b) b.click();
   });
 }

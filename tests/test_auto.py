@@ -6,15 +6,29 @@ HELP = """
 () => {
   const slots = [...document.querySelectorAll('.slot:not(.filled)')];
   if (slots.length) {
-    const need = slots.map(s=>s.dataset.need);
-    const card = [...document.querySelectorAll('.pool .wcard:not(.used)')].find(c=>need.includes(c.dataset.pos));
-    if (card) { card.click(); const slot = slots.find(s=>s.dataset.need===card.dataset.pos); slot.click(); return 'build'; }
+    const cards = [...document.querySelectorAll('.pool .wcard:not(.used)')];
+    // 优先按 data-expect 精确匹配，否则退回按词性
+    let card = null, slot = null;
+    for (const s of slots) {
+      if (s.dataset.expect) {
+        const c = cards.find(c => c.dataset.en === s.dataset.expect);
+        if (c) { card = c; slot = s; break; }
+      }
+    }
+    if (!card) {
+      const need = slots.map(s=>s.dataset.need);
+      card = cards.find(c=>need.includes(c.dataset.pos));
+      if (card) slot = slots.find(s=>s.dataset.need===card.dataset.pos);
+    }
+    if (card && slot) { card.click(); slot.click(); return 'build'; }
     return null;
   }
   const c = document.querySelector('.wcard:not(.used)');
   if (c) { const b=document.querySelector('.bucket[data-b="'+c.dataset.pos+'"]'); if(b){ c.click(); b.click(); return 'sort'; } }
   const ch = document.querySelector('.chip:not(.found)');
   if (ch) { const b=document.querySelector('.bucket[data-b="'+ch.dataset.pos+'"]'); if(b){ ch.click(); b.click(); return 'chip'; } }
+  const opts = [...document.querySelectorAll('.opt:not(.wrong)')];
+  if (opts.length) { opts[0].click(); return 'opt'; }
   return null;
 }
 """
@@ -46,7 +60,7 @@ def main():
         pg.evaluate("()=>{Store.data.unlockAll=true;Store.save();}")
         pg.reload()
         pg.wait_for_timeout(300)
-        for lv in range(1, 9):
+        for lv in range(1, 11):
             pg.evaluate("()=>screenMap()")
             pg.wait_for_timeout(200)
             pg.click('.map-item[data-lv="%d"]' % lv)
