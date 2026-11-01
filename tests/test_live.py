@@ -38,7 +38,7 @@ with sync_playwright() as p:
     pg.wait_for_timeout(600)
     pg.screenshot(path='shots/live/05_scaffold.png')
     # 通关全部
-    for lv in range(1, 9):
+    for lv in range(1, 11):
         pg.evaluate("()=>{Store.data.unlockAll=true;Store.save();screenMap();}"); pg.wait_for_timeout(250)
         pg.click(f'.map-item[data-lv="{lv}"]'); pg.wait_for_timeout(400)
         if pg.query_selector('#next'): pg.click('#next'); pg.wait_for_timeout(300)
