@@ -227,7 +227,7 @@ const stageEl = () => document.getElementById('stage');
 const hintEl = () => document.getElementById('hint');
 
 function paint(html) {
-  const st = stageEl();
+  const st = document.getElementById('stageBody') || stageEl();
   st.innerHTML = html;
   st.style.animation = 'none'; void st.offsetWidth; st.style.animation = '';
   hintEl().innerHTML = ''; hintEl().style.color = '';

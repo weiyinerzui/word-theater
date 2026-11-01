@@ -141,15 +141,19 @@ body{
 .stage{
   min-height:430px;
   display:flex;flex-direction:column;
-  gap:12px;
+  gap:10px;
+  flex:0 0 auto;
   animation:fadeUp .34s cubic-bezier(.2,.9,.3,1.05);
 }
+.stage-body{display:flex;flex-direction:column;gap:12px;min-height:0}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 
 .hint{
   min-height:26px;
+  margin-top:-4px;
   text-align:center;
   font-size:13.5px;color:var(--sub);
+  transition:color .2s;
 }
 .hint b{color:var(--ink)}
 
@@ -618,8 +622,10 @@ input.nameInput:focus{outline:3px solid #ffe0a3;outline-offset:1px}
     <button class="ghost-btn" id="btnSet" title="设置" aria-label="设置">⚙️</button>
   </header>
 
-  <section class="stage" id="stage" aria-live="polite"></section>
-  <div class="hint" id="hint" aria-live="polite"></div>
+  <section class="stage" id="stage" aria-live="polite">
+    <div class="stage-body" id="stageBody"></div>
+    <div class="hint" id="hint" aria-live="polite"></div>
+  </section>
 </main>
 
 <div id="sheetRoot"></div>
@@ -855,7 +861,7 @@ const stageEl = () => document.getElementById('stage');
 const hintEl = () => document.getElementById('hint');
 
 function paint(html) {
-  const st = stageEl();
+  const st = document.getElementById('stageBody') || stageEl();
   st.innerHTML = html;
   st.style.animation = 'none'; void st.offsetWidth; st.style.animation = '';
   hintEl().innerHTML = ''; hintEl().style.color = '';
