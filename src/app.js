@@ -268,6 +268,7 @@ function closeSheet() { document.getElementById('sheetRoot').innerHTML = ''; }
 function screenMap() {
   setTitle('词性小剧场');
   run.failed = false;
+  run.id = 1;
   run.hearts = 0;
   renderHearts();
   const done = Object.keys(Store.data.levels).length;
@@ -443,7 +444,7 @@ function roundSort(cfg, buckets, onDone) {
         </div>
         <div class="buckets" id="buckets" style="margin-top:12px">
           ${buckets.map(k => `<button class="bucket b-${k}" data-b="${k}">
-            <span class="b-head">${POS[k].emoji} ${POS[k].name}<small>· ${POS[k].short}</small>
+            <span class="b-head"><span class="b-name">${POS[k].emoji} ${POS[k].name}</span><small>· ${POS[k].short}</small>
               <span class="b-count" data-c="${k}">0</span></span>
             <span class="b-items" data-items="${k}"></span>
           </button>`).join('')}
@@ -561,7 +562,7 @@ function roundSentence(cfg, buckets, onDone) {
         <div class="center" style="font-size:12.5px;color:var(--sub);margin-top:6px">${esc(cfg.zh)}</div>
         <div class="buckets" id="buckets" style="margin-top:12px">
           ${buckets.map(k => `<button class="bucket b-${k}" data-b="${k}" style="min-height:auto">
-            <span class="b-head">${POS[k].emoji} ${POS[k].name}<small>· ${POS[k].short}</small>
+            <span class="b-head"><span class="b-name">${POS[k].emoji} ${POS[k].name}</span><small>· ${POS[k].short}</small>
               <span class="b-count" data-c="${k}">0</span></span>
           </button>`).join('')}
         </div>
@@ -837,7 +838,7 @@ async function startLevel(id) {
     for (let i = 0; i < id - 1; i++) {
       (LEVELS[i].newRoles || []).forEach(k => { if (!learned.includes(k)) learned.push(k); });
     }
-    setTitle(`第 ${id} 关 · 认识新角色`);
+    setTitle(`第${id}关 · 认识新角色`);
     await screenMeet(lv.newRoles, learned);
   }
   nextRound();
@@ -848,7 +849,7 @@ async function nextRound() {
   if (run.failed) return;
   if (run.idx >= lv.rounds.length) return finishLevel();
 
-  setTitle(`第 ${run.id} 关 · ${lv.name}（${run.idx + 1}/${lv.rounds.length}）`);
+  setTitle(`第${run.id}关 · ${lv.name} ${run.idx + 1}/${lv.rounds.length}`);
   const cfg = lv.rounds[run.idx];
   const buckets = cfg.buckets || lv.buckets;
 
@@ -868,7 +869,7 @@ async function nextRound() {
 
 function levelFailed() {
   const lv = LEVELS[run.id - 1];
-  setTitle(`第 ${run.id} 关 · ${lv.name}`);
+  setTitle(`第${run.id}关 · ${lv.name}`);
   Sound.no();
   paint(`
     <div class="panel center" style="padding:26px 18px">

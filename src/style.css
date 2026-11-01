@@ -280,7 +280,8 @@ body{
   display:flex;flex-direction:column;gap:7px;
 }
 .bucket:hover{transform:translateY(-1px)}
-.bucket .b-head{display:flex;align-items:center;gap:6px;font-weight:800;font-size:14px}
+.bucket .b-head{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-weight:800;font-size:14px}
+.bucket .b-head .b-name{white-space:nowrap}
 .bucket .b-count{margin-left:auto;font-size:12px;font-weight:700;color:var(--sub)}
 .bucket .b-items{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;min-height:34px}
 .bucket.b-n{border-color:var(--n-line);background:linear-gradient(180deg,#fffaf5,var(--n-bg))}
@@ -543,7 +544,10 @@ input.nameInput:focus{outline:3px solid #ffe0a3;outline-offset:1px}
   .pool{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:7px}
   .wcard .wc-en{font-size:13.5px}
   .duo{grid-template-columns:1fr}
-  .buckets{grid-template-columns:1fr}
+  .ttl{font-size:12.5px}
+  .bucket .b-head{font-size:13px;gap:4px}
+  .bucket .b-head small{font-size:10px;order:2;flex:1 1 100%;margin:1px 0 0;white-space:nowrap}
+  .bucket .b-count{font-size:11px}
 }
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:.001s !important;transition-duration:.001s !important}
